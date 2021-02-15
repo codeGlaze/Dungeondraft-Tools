@@ -1,0 +1,685 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Bio.cs</name>
+    </assembly>
+    <members>
+        <member name="T:BioLib.Streams.BinaryReaderExtensions">
+            <summary>
+            Extension methods for <see cref="T:System.IO.BinaryReader"/>
+            </summary>
+        </member>
+        <member name="M:BioLib.Streams.BinaryReaderExtensions.ReadNullTerminatedString(System.IO.BinaryReader,System.Boolean)">
+            <summary>
+            Read a null-terminated ASCII or UTF-8 string
+            </summary>
+            <param name="binaryReader"></param>
+            <param name="utf8">Interpret the string as UTF-8; otherwise ASCII is used</param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Streams.BinaryReaderExtensions.ReadNullTerminatedStringBackwards(System.IO.BinaryReader,System.Boolean)">
+            <summary>
+            Read backwards from the current position until a null character is encountered and return the string
+            representation in ASCII or UTF-8.<br/>Only parsing is done backwards, the string is still read from the beginning!
+            </summary>
+            <param name="binaryReader"></param>
+            <param name="utf8">Interpret the string as UTF-8; otherwise ASCII is used</param>
+            <returns></returns>
+        </member>
+        <member name="T:BioLib.Streams.StreamExtensions">
+            <summary>
+            Extension methods for generic <see cref="T:System.IO.Stream"/>s
+            </summary>
+        </member>
+        <member name="F:BioLib.Streams.StreamExtensions.bufferSize">
+            <summary>
+            The size of the internal buffer used for most of the functions
+            </summary>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.KeepPosition(System.IO.Stream,System.Action)">
+            <summary>
+            Ensure the <paramref name="stream"/>'s position is not changed by the <paramref name="action"/> passed as parameter.
+            <br/><br/>Usage:
+            <code>myStream.KeepPosition(() => myStream.Copy(otherStream));</code>
+            </summary>
+            <param name="stream"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.IsEqualTo(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Compare two Streams by content. Does not change the streams' positions.
+            </summary>
+            <param name="stream">First stream to compare</param>
+            <param name="other">Second stream to compare</param>
+            <returns>True if the streams' contents are equal, otherwise false</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.MoveToStart(System.IO.Stream)">
+            <summary>
+            Move to the beginning of the stream
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.MoveToEnd(System.IO.Stream)">
+            <summary>
+            Move to the end of the stream
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.Skip(System.IO.Stream,System.Int64,System.Int64,System.Int64)">
+            <summary>
+            Advance the stream's position by N bytes while staying in bounds
+            </summary>
+            <param name="stream"></param>
+            <param name="bytes">Amount of bytes to move. Can be negative.</param>
+            <param name="lowerLimit">Optional lower limit, defaults to 0</param>
+            <param name="upperLimit">Optional upper limt, defaults to the stream's length</param>
+            <returns>True, if the position could be set; false, if the new position would have been out of bounds</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.Copy(System.IO.Stream)">
+            <summary>
+            Create a copy of a stream
+            </summary>
+            <param name="stream"></param>
+            <returns>A <see cref="T:System.IO.MemoryStream"/> with a copy of the stream's content</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.Copy(System.IO.Stream,System.IO.Stream,System.Int64)">
+            <summary>
+            Copy N <paramref name="bytes"/> from <paramref name="input"/> to <paramref name="output"/> stream
+            </summary>
+            <param name="input">Input stream</param>
+            <param name="output">Output stream</param>
+            <param name="bytes">Amount of bytes to copy or -1 to copy all</param>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.CopyUntil(System.IO.Stream,System.IO.Stream,System.Int64)">
+            <summary>
+            Copy all bytes from the current position until <paramref name="endPosition"/> to <paramref name="output"/> stream
+            </summary>
+            <param name="input">Input stream</param>
+            <param name="output">Output stream</param>
+            <param name="endPosition">The end offset (exclusive)</param>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.Extract(System.IO.Stream,System.Int64)">
+            <summary>
+            Extract N bytes from the current position and return them as a new <see cref="T:System.IO.MemoryStream"/>
+            </summary>
+            <param name="stream"></param>
+            <param name="bytes">The amount of bytes to extract</param>
+            <returns>A new <see cref="T:System.IO.MemoryStream"/> with the extracted part of the stream</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.ExtractFrom(System.IO.Stream,System.Int64,System.Int32)">
+            <summary>
+            Extract N bytes beginning at a given <paramref name="startOffset"/> and return them as a new <see cref="T:System.IO.MemoryStream"/>
+            </summary>
+            <param name="stream"></param>
+            <param name="startOffset"></param>
+            <param name="bytes"></param>
+            <returns>A new <see cref="T:System.IO.MemoryStream"/> with the extracted part of the stream</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.ExtractUntil(System.IO.Stream,System.Int64)">
+            <summary>
+            Extract the bytes between the current position and the <paramref name="endOffset"/> and return them as a new <see cref="T:System.IO.MemoryStream"/>
+            </summary>
+            <param name="stream"></param>
+            <param name="endOffset"></param>
+            <returns>A new <see cref="T:System.IO.MemoryStream"/> with the extracted part of the stream</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.ExtractFromUntil(System.IO.Stream,System.Int64,System.Int64)">
+            <summary>
+            Extract the bytes between <paramref name="startOffset"/> and <paramref name="endOffset"/> and return them as a new <see cref="T:System.IO.MemoryStream"/>
+            </summary>
+            <param name="stream"></param>
+            <param name="startOffset"></param>
+            <param name="endOffset"></param>
+            <returns>A new <see cref="T:System.IO.MemoryStream"/> with the extracted part of the stream</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.Split(System.IO.Stream,System.Int64,System.Int64)">
+            <summary>
+            Split <paramref name="stream"/> into <see cref="T:System.IO.MemoryStream"/>s of <paramref name="length"/> <see langword="null"/>,
+            beginning at the current position of the stream.<br/>
+            This returns data on demand (as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>), so it should be efficient
+            even for large input streams.
+            </summary>
+            <param name="stream"></param>
+            <param name="length">The length of each part (in bytes)</param>
+            <param name="endOffset">Position at which to stop splitting or -1 to continue until the end</param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.Find(System.IO.Stream,System.Byte[],System.Int64)">
+            <summary>
+            Find the given <paramref name="pattern"/> in the stream and set the stream's position to the position at which it was found.
+            If the <paramref name="pattern"/> was not found, the position does not change.
+            <br/><br/>
+            <b>Warning</b>: This function uses naive search, reading and comparing a single byte at a time. This can be very slow for big streams!
+            Only use this function if you expect the pattern to be found and/or set the <paramref name="endOffset"/>. Otherwise your programm may freeze.
+            </summary>
+            <param name="stream">The search stream</param>
+            <param name="pattern">The byte pattern to search for</param>
+            <param name="endOffset">An optional index at which the search should stop, defaults to the end of the stream</param>
+            <returns>True if the pattern was found, otherwise false</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.FindBackwards(System.IO.Stream,System.Byte[],System.Int64)">
+            <summary>
+            Find the given <paramref name="pattern"/> in the stream using backwards search and set the stream's position to the position at which it was found.
+            If the <paramref name="pattern"/> was not found, the position does not change.
+            <br/><br/>
+            <b>Warning</b>: This function uses naive search, reading and comparing a single byte at a time. This can be very slow for big streams!
+            Only use this function if you expect the pattern to be found and/or set the <paramref name="endOffset"/>. Otherwise your programm may freeze.
+            </summary>
+            <param name="stream">The search stream</param>
+            <param name="pattern">The byte pattern to search for</param>
+            <param name="endOffset">An optional index at which the search should stop, defaults to the beginning of the stream</param>
+            <returns>True if the pattern was found, otherwise false</returns>
+        </member>
+        <member name="M:BioLib.Streams.StreamExtensions.WriteToFile(System.IO.Stream,System.String,System.String,System.Action{System.IO.Stream,System.IO.Stream})">
+            <summary>
+            Write the content of a stream to a file. Does not advance the stream's position.
+            </summary>
+            <param name="input"></param>
+            <param name="path">Path to the file</param>
+            <param name="promptId"></param>
+            <param name="copyFunction"></param>
+            <returns>True if the operation succeeded, otherwise false. Exceptions might be thrown depending on the <paramref name="copyFunction"/>.</returns>
+        </member>
+        <member name="T:BioLib.Bio">
+            <summary>
+             Main library
+            </summary>
+        </member>
+        <member name="M:BioLib.Bio.MatchPattern(System.Byte[],System.Byte[],System.Int32)">
+            <summary>
+            Test if a byte array contains a specific <paramref name="pattern"/> at position <paramref name="pos"/> by comparing each byte.
+            </summary>
+            <param name="array">Input array to search pattern in</param>
+            <param name="pattern">The pattern to search</param>
+            <param name="pos">Index to start searching at</param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.Clamp``1(``0,``0,``0)">
+            <summary>
+            Return <paramref name="value"/> clamped to the inclusive range of <paramref name="min"/> and <paramref name="max"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value">The value to clamp</param>
+            <param name="min">Minimum value (inclusive)</param>
+            <param name="max">Maximum value (inclusive)</param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.RandomArray``1(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Create an array of random numbers
+            </summary>
+            <typeparam name="T">A numeric data type</typeparam>
+            <param name="arraySize">The amount of values to generate</param>
+            <param name="min">Minimum value for each number (inclusive)</param>
+            <param name="max">Maximum value for each number (inclusive)</param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.RandomStream(System.Int32)">
+            <summary>
+            Create a <see cref="T:System.IO.MemoryStream"/> filled with random bytes
+            </summary>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.EnsureFileDoesNotExist(System.String,System.String)">
+            <summary>
+            Convenience function. Ensures a path is valid and does not exist.
+            If the path already exists, a prompt is displayed asking the user to overwrite or rename.
+            </summary>
+            <param name="path">The path to test</param>
+            <param name="promptId">A unique ID for the prompt, refer to <see cref="M:BioLib.Bio.Prompt(System.String,System.String,BioLib.PromptOptions)"/> for more information.</param>
+            <returns>The file path depending on user choice or null indicating the file should not be overwritten.</returns>
+        </member>
+        <member name="M:BioLib.Bio.GetRenamedFilePath(System.String)">
+            <summary>
+            Rename a file Windows Explorer style (by appending ' (&lt;number&gt;)').
+            This function ensures to only return a path, which does not already exist.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.PathReplaceInvalidChars(System.String,System.String,System.Boolean)">
+            <summary>
+            Replace all invalid characters in a path string
+            </summary>
+            <param name="path">The path to sanitize</param>
+            <param name="by">The string with which invalid characters will be replaced</param>
+            <param name="isDirectory">If the path points to a directory, file name checks are disabled</param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.PathReplaceInvalidFileNameChars(System.String,System.String)">
+            <summary>
+            Replace all invalid characters in a file name. This function only tests the file part of a path string,
+            it does not guarantee that the whole path is valid. Use <see cref="M:BioLib.Bio.PathReplaceInvalidChars(System.String,System.String,System.Boolean)"/> instead.
+            </summary>
+            <param name="path"></param>
+            <param name="by"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.GetSafeOutputPath(System.String,System.String)">
+            <summary>
+            Combine a (relative or absolute) file path and an output directory.
+            The returned path is guaranteed to be valid and inside the <paramref name="outputDirectory"/>.
+            If a valid path could not be created, a <see cref="T:System.Security.SecurityException"/> is thrown.
+            </summary>
+            <param name="outputDirectory"></param>
+            <param name="filePath">Relative or absolute path to be merged with <paramref name="outputDirectory"/></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.PathRemoveRelativeParts(System.String)">
+            <summary>
+            Remove relative parts (/./ or /../) of a <paramref name="path"/>
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.FileOpen(System.String,System.IO.FileMode)">
+            <summary>
+            Open a file and handle exceptions
+            </summary>
+            <param name="path"></param>
+            <param name="fileMode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.FileMove(System.String,System.String,System.String)">
+            <summary>
+            Move a file from <paramref name="from"/> to <paramref name="to"/> making sure the paths are valid.
+            If <paramref name="promptId"/> is not null, an overwrite prompt is displayed if <paramref name="to"/> already exists.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="promptId"></param>
+            <returns>True if the operation succeeded, otherwise false</returns>
+        </member>
+        <member name="M:BioLib.Bio.DirectoryIsEmpty(System.String)">
+            <summary>
+            Returns is a directory is empty or does not exist
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.Header(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Print a standard command line program header
+            </summary>
+            <param name="name">The name of the program</param>
+            <param name="version">The program version</param>
+            <param name="year">Development year(s)</param>
+            <param name="description">Short description of the basic program functionality</param>
+            <param name="usage">Program usage information</param>
+            <param name="license">Program license</param>
+        </member>
+        <member name="M:BioLib.Bio.HasCommandlineSwitchHelp(System.String[])">
+            <summary>
+            Convenience function to check if the command line arguments contain one of the valid help switches -h, --help, /?, -?, and /h
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.Separator">
+            <summary>
+            Print a seperator line
+            </summary>
+        </member>
+        <member name="M:BioLib.Bio.GetProgramName">
+            <summary>
+            Return the name of the currently running program
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.GetProgramPath">
+            <summary>
+            Return the path of the currently running program
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.Prompt(System.String,System.String,BioLib.PromptOptions)">
+            <summary>
+            Print a prompt message, wait for valid user input and return the selected option.
+            Keeps an internal settings object to allow options like 'always' or 'never'.
+            </summary>
+            <param name="message">The message to print</param>
+            <param name="promptId">
+            	A unique ID for this prompt, e.g. when the user selects 'always',<br/>subsequent calls 
+            	to <see cref="M:BioLib.Bio.Prompt(System.String,System.String,BioLib.PromptOptions)"/> with the same ID automatically return true
+            </param>
+            <param name="promptOptions">A <see cref="T:BioLib.PromptOptions"/> object</param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.Bio.Progress(System.String,System.Int32,System.Int32)">
+            <summary>
+            Print a simple progress message, e.g.
+            <code>[1/10] Processing file file1.txt</code>
+            </summary>
+            <param name="msg"></param>
+            <param name="current"></param>
+            <param name="total"></param>
+        </member>
+        <member name="M:BioLib.Bio.ProgressWithoutDuplicates(System.String,System.Int32,System.Int32)">
+            <summary>
+            Print a simple progress message, e.g.
+            <code>[1/10] Processing file file1.txt</code>
+            This function saves the last <paramref name="current"/> value and does not print anything for subsequent calls
+            with the same <paramref name="current"/> value.<br/><see cref="M:BioLib.Bio.ProgressWithoutDuplicatesReset"/> must be called
+            after finishing to ensure the next call does output a message.
+            </summary>
+            <param name="msg"></param>
+            <param name="current"></param>
+            <param name="total"></param>
+        </member>
+        <member name="M:BioLib.Bio.ProgressWithoutDuplicatesReset">
+            <summary>
+            Reset the last progress value. See <seealso cref="M:BioLib.Bio.ProgressWithoutDuplicates(System.String,System.Int32,System.Int32)"/>
+            </summary>
+        </member>
+        <member name="M:BioLib.Bio.PrintNumbers(System.Byte[],System.Int32,System.String,System.String,System.UInt32,System.UInt32,BioLib.Bio.LOG_SEVERITY)">
+            <summary>
+            Print an array of numbers in a format that fits numeric values better than the generic <see cref="M:BioLib.Bio.Cout(System.Collections.IEnumerable,BioLib.Bio.LOG_SEVERITY)"/>
+            </summary>
+            <param name="array">The array to print</param>
+            <param name="endIndex">The amount of values to print</param>
+            <param name="formatString">The format string to pass to <see cref="M:System.Byte.ToString(System.String)"/> for each number</param>
+            <param name="formatStringOffset">The format string to pass to <see cref="M:System.Byte.ToString(System.String)"/> for the offset at the beginning of each line</param>
+            <param name="valuesPerLine">The maximum amount of numbers per line</param>
+            <param name="separatorPosition">Position at which a larger gap should be inserted</param>
+            <param name="logSeverity">The <see cref="T:BioLib.Bio.LOG_SEVERITY"/> for the output</param>
+        </member>
+        <member name="M:BioLib.Bio.HexDump(System.Byte[],System.Int32,BioLib.Bio.LOG_SEVERITY)">
+            <summary>
+            Print a byte array in the form of a hex dump
+            </summary>
+            <param name="array"></param>
+            <param name="endIndex"></param>
+            <param name="logSeverity"></param>
+        </member>
+        <member name="M:BioLib.Bio.HexDump(System.IO.Stream,System.Int32,BioLib.Bio.LOG_SEVERITY)">
+            <summary>
+            Print a stream's content in the form of a hex dump
+            </summary>
+            <param name="stream"></param>
+            <param name="bytesToDump"></param>
+            <param name="logSeverity"></param>
+        </member>
+        <member name="M:BioLib.Bio.Cout(System.String,BioLib.Bio.LOG_SEVERITY)">
+            <summary>
+            Print a message to stdout (and stderr depending on the <paramref name="logSeverity"/>)
+            </summary>
+            <param name="msg">The message to print</param>
+            <param name="logSeverity">Affects how the message will be displayed. Refer to the <see cref="T:BioLib.Bio.LOG_SEVERITY"/> documentation.</param>
+        </member>
+        <member name="M:BioLib.Bio.Cout(System.Collections.IEnumerable,BioLib.Bio.LOG_SEVERITY)">
+            <summary>
+            Print the string representation of each object in an enumerable to stdout along with its index
+            </summary>
+            <param name="enumerable"></param>
+            <param name="logSeverity"></param>
+        </member>
+        <member name="M:BioLib.Bio.Cout(System.Byte[],System.Int32,BioLib.Bio.LOG_SEVERITY)">
+            <summary>
+            Pretty print a byte array.
+            Convenience function, which calls <see cref="M:BioLib.Bio.HexDump(System.Byte[],System.Int32,BioLib.Bio.LOG_SEVERITY)"/>
+            </summary>
+            <param name="array"></param>
+            <param name="bytesToDump">The amount of bytes to print</param>
+            <param name="logSeverity"></param>
+        </member>
+        <member name="M:BioLib.Bio.Cout(System.IO.Stream,System.Int32,BioLib.Bio.LOG_SEVERITY)">
+            <summary>
+            Pretty print a stream's content.
+            Convenience function, which calls <see cref="M:BioLib.Bio.HexDump(System.Byte[],System.Int32,BioLib.Bio.LOG_SEVERITY)"/>
+            </summary>
+            <param name="stream"></param>
+            <param name="bytesToDump">The amount of bytes to print</param>
+            <param name="logSeverity"></param>
+        </member>
+        <member name="M:BioLib.Bio.Cout">
+            <summary>
+            Print empty line to stdout
+            </summary>
+        </member>
+        <member name="M:BioLib.Bio.Cout(System.Object,BioLib.Bio.LOG_SEVERITY)">
+            <summary>
+            Print the string representation of an object to stdout. See <see cref="M:BioLib.Bio.Cout(System.String,BioLib.Bio.LOG_SEVERITY)"/>.
+            </summary>
+            <param name="msg"></param>
+            <param name="logSeverity"></param>
+        </member>
+        <member name="M:BioLib.Bio.Debug(System.Object)">
+            <summary>
+            Print a debug message.
+            This is a convenience method to be used instead of <see cref="M:BioLib.Bio.Cout(System.Object,BioLib.Bio.LOG_SEVERITY)"/> with severity <see cref="F:BioLib.Bio.LOG_SEVERITY.DEBUG"/>
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:BioLib.Bio.Warn(System.Object)">
+            <summary>
+            Print a warning message.
+            This is a convenience method to be used instead of <see cref="M:BioLib.Bio.Cout(System.Object,BioLib.Bio.LOG_SEVERITY)"/> with severity <see cref="F:BioLib.Bio.LOG_SEVERITY.WARNING"/>
+            </summary>
+            <param name="msg"></param>
+        </member>
+        <member name="M:BioLib.Bio.Error(System.Object,BioLib.Bio.EXITCODE)">
+            <summary>
+            Print an error message and exit if an exit code is specified
+            </summary>
+            <param name="msg">The message to print</param>
+            <param name="exitCode"></param>
+        </member>
+        <member name="M:BioLib.Bio.Error(System.Object,System.Int32)">
+            <summary>
+            Print an error message and exit if an exit code is specified
+            </summary>
+            <param name="msg"></param>
+            <param name="exitCode"></param>
+        </member>
+        <member name="M:BioLib.Bio.Pause">
+            <summary>
+            Delay program termination until a key is pressed.<br/>
+            <b>This function will only work in the debug version of BioLib!</b>
+            </summary>
+        </member>
+        <member name="T:BioLib.Bio.LOG_SEVERITY">
+            <summary>
+            The severity of a log message
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.LOG_SEVERITY.DEBUG">
+            <summary>
+            Debug message. Will only be printed in the debug version of BioLib.
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.LOG_SEVERITY.INFO">
+            <summary>
+            Info message.
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.LOG_SEVERITY.WARNING">
+            <summary>
+            Warning message.
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.LOG_SEVERITY.ERROR">
+            <summary>
+            Error message. Will also print the message to stderr.
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.LOG_SEVERITY.CRITICAL">
+            <summary>
+            Unexpected errors. Will also print the message to stderr.
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.LOG_SEVERITY.MESSAGE">
+            <summary>
+            Normal console output. Will not add the log severity as message prefix.
+            </summary>
+        </member>
+        <member name="T:BioLib.Bio.EXITCODE">
+            <summary>
+            Possible exit codes for a program
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.EXITCODE.NONE">
+            <summary>
+            Program does not exit
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.EXITCODE.SUCCESS">
+            <summary>
+            Program terminated without any errors
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.EXITCODE.IO_ERROR">
+            <summary>
+            General input/output error, i.e. 'File not found' or 'Permission denied'
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.EXITCODE.INVALID_INPUT">
+            <summary>
+            The program received invalid input, e.g. a file with an unsupported type
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.EXITCODE.INVALID_PARAMETER">
+            <summary>
+            The user specified an invalid parameter, e.g. a non-existant command line switch or an out-of-bounds value
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.EXITCODE.NOT_SUPPORTED">
+            <summary>
+            The program does not support the action initialized by the user
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.EXITCODE.RUNTIME_ERROR">
+            <summary>
+            Generic error at runtime
+            </summary>
+        </member>
+        <member name="F:BioLib.Bio.EXITCODE.SIGINT">
+            <summary>
+            Interrupt signal received (Ctrl+C)
+            </summary>
+        </member>
+        <member name="T:BioLib.PromptOptions">
+            <summary>
+            A collection of <see cref="T:BioLib.PromptOption"/>s to be displayed in a prompt
+            </summary>
+        </member>
+        <member name="P:BioLib.PromptOptions.DefaultOption">
+            <summary>
+            The option to select if the user presses enter
+            </summary>
+        </member>
+        <member name="M:BioLib.PromptOptions.#ctor(System.Collections.Generic.IEnumerable{BioLib.PromptOption},System.Char)">
+            <summary>
+            Create a new PromptOptions object from an <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:BioLib.PromptOption"/>s
+            </summary>
+            <param name="promptOptions">The <see cref="T:BioLib.PromptOption"/>s to display</param>
+            <param name="defaultKey">The key used as default, if the user presses enter. An option with this key must exist!</param>
+        </member>
+        <member name="M:BioLib.PromptOptions.Add(BioLib.PromptOption)">
+            <summary>
+            Add a new <see cref="T:BioLib.PromptOption"/>
+            </summary>
+            <param name="option">The option to add</param>
+        </member>
+        <member name="M:BioLib.PromptOptions.Select(System.Char)">
+            <summary>
+            Selects the <see cref="T:BioLib.PromptOption"/> with the key <paramref name="input"/>.
+            Throws an <see cref="T:System.ArgumentException"/> if no option with the given key exists.
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.PromptOptions.ToString">
+            <summary>
+            Return the string representation of the options
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BioLib.PromptOption">
+            <summary>
+            A single option used in a prompt.
+            </summary>
+        </member>
+        <member name="F:BioLib.PromptOption.NONE">
+            <summary>
+            A constant representing the user did not select any of the available options,
+            e.g. by pressing a key, which is not linked to an option
+            </summary>
+        </member>
+        <member name="F:BioLib.PromptOption.name">
+            <summary>
+            The name of the option
+            </summary>
+        </member>
+        <member name="F:BioLib.PromptOption.key">
+            <summary>
+            The key to press to select the option
+            </summary>
+        </member>
+        <member name="F:BioLib.PromptOption.isDefaultChoice">
+            <summary>
+            True if this is the option to select if the user presses enter
+            </summary>
+        </member>
+        <member name="F:BioLib.PromptOption.action">
+            <summary>
+            The function to execute when selected
+            </summary>
+        </member>
+        <member name="M:BioLib.PromptOption.#ctor(System.String)">
+            <summary>
+            Create a new option
+            </summary>
+            <param name="name">The name of the option</param>
+        </member>
+        <member name="M:BioLib.PromptOption.#ctor(System.String,System.Char)">
+            <summary>
+            Create a new option
+            </summary>
+            <param name="name">The name of the option</param>
+            <param name="key">The key to select this option</param>
+        </member>
+        <member name="M:BioLib.PromptOption.#ctor(System.String,System.Func{System.Object})">
+            <summary>
+            Create a new option
+            </summary>
+            <param name="name">The name of the option</param>
+            <param name="action">A function to execute if the option is selected</param>
+        </member>
+        <member name="M:BioLib.PromptOption.#ctor(System.String,System.Func{System.Object},System.Char)">
+            <summary>
+            Create a new option
+            </summary>
+            <param name="name">The name of the option</param>
+            <param name="action">A function to execute if the option is selected</param>
+            <param name="key">The key to select this option</param>
+        </member>
+        <member name="M:BioLib.PromptOption.Select">
+            <summary>
+            Select an option and execute the function bound to it
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BioLib.PromptOption.ToString">
+            <summary>
+            Return the string representation of the option
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BioLib.PromptInput">
+            <summary>
+            Special inputs, which can be received in a prompt
+            </summary>
+        </member>
+        <member name="F:BioLib.PromptInput.NULL_CHAR">
+            <summary>
+            The \0 character
+            </summary>
+        </member>
+        <member name="F:BioLib.PromptInput.ENTER">
+            <summary>
+            The enter key - this is interpreted as the default option
+            </summary>
+        </member>
+    </members>
+</doc>
